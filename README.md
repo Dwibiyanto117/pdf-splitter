@@ -6,6 +6,7 @@ All processing is done locally in your browser using JavaScript, ensuring maximu
 
 ## Features
 - **Batch Processing**: Upload and process multiple PDF files at once with an intuitive drag-and-drop interface.
+- **Compress Module**: Compress your PDFs locally with the new Compress tab, reducing file sizes via image flattening without needing an API.
 - **Custom Page Ranges**: Select exactly which pages you want to extract from each individual document.
 - **Global Settings**: Apply a default page extraction range to all uploaded files simultaneously to save time.
 - **Merge Option**: Optionally merge the extracted pages from all uploaded documents into one single PDF file.
@@ -56,5 +57,6 @@ Ensure you have the following installed on your computer:
 - React 18 (with TypeScript)
 - Vite (Build Tool & Dev Server)
 - pdf-lib (for parsing, splitting, and merging PDFs client-side)
+- pdfjs-dist (for rendering pages to canvases to enable local compression)
 - jszip & file-saver (for generating and downloading ZIP archives)
 - Lucide React (for modern UI icons)
