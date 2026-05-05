@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, Trash2, SplitSquareHorizontal, Settings } from 'lucide-react';
+import { Upload, FileText, Trash2, SplitSquareHorizontal, Settings, ArrowUp, ArrowDown } from 'lucide-react';
 import { loadPdfData, processPdfs } from '../utils/pdfProcessor';
 import type { PdfFileItem } from '../utils/pdfProcessor';
 
@@ -75,6 +75,32 @@ export function Splitter() {
   const clearAllFiles = () => {
     setFiles([]);
     setShowDeleteConfirm(false);
+  };
+
+  const moveFileUp = (index: number) => {
+    if (index === 0) return;
+    setFiles(prev => {
+      const newFiles = [...prev];
+      [newFiles[index - 1], newFiles[index]] = [newFiles[index], newFiles[index - 1]];
+      return newFiles;
+    });
+  };
+
+  const moveFileDown = (index: number) => {
+    if (index === files.length - 1) return;
+    setFiles(prev => {
+      const newFiles = [...prev];
+      [newFiles[index + 1], newFiles[index]] = [newFiles[index], newFiles[index + 1]];
+      return newFiles;
+    });
+  };
+
+  const sortFilesAsc = () => {
+    setFiles(prev => [...prev].sort((a, b) => a.name.localeCompare(b.name)));
+  };
+
+  const sortFilesDesc = () => {
+    setFiles(prev => [...prev].sort((a, b) => b.name.localeCompare(a.name)));
   };
 
   const updateFileSetting = (id: string, field: 'fromPage' | 'toPage', value: number) => {
@@ -199,17 +225,35 @@ export function Splitter() {
               <FileText size={20} className="dropzone-icon"/>
               <span>Selected Files ({files.length})</span>
             </div>
-            <button 
-              className="btn-icon" 
-              onClick={() => setShowDeleteConfirm(true)} 
-              title="Delete all files" 
-              style={{ color: 'var(--error)' }}
-            >
-              <Trash2 size={20} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button 
+                className="btn-secondary" 
+                onClick={sortFilesAsc} 
+                title="Sort A-Z"
+                style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+              >
+                Sort A-Z
+              </button>
+              <button 
+                className="btn-secondary" 
+                onClick={sortFilesDesc} 
+                title="Sort Z-A"
+                style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+              >
+                Sort Z-A
+              </button>
+              <button 
+                className="btn-icon" 
+                onClick={() => setShowDeleteConfirm(true)} 
+                title="Delete all files" 
+                style={{ color: 'var(--error)' }}
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
           </div>
           <div className="file-list">
-            {files.map((file) => (
+            {files.map((file, index) => (
               <div key={file.id} className="file-item">
                 <div className="file-info">
                   <FileText size={18} className="text-muted"/>
@@ -236,6 +280,24 @@ export function Splitter() {
                       value={file.toPage}
                       onChange={(e) => updateFileSetting(file.id, 'toPage', parseInt(e.target.value) || 1)}
                     />
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.25rem', marginRight: '0.5rem' }}>
+                    <button 
+                      className="btn-icon" 
+                      onClick={() => moveFileUp(index)} 
+                      disabled={index === 0}
+                      title="Move up"
+                    >
+                      <ArrowUp size={18} />
+                    </button>
+                    <button 
+                      className="btn-icon" 
+                      onClick={() => moveFileDown(index)} 
+                      disabled={index === files.length - 1}
+                      title="Move down"
+                    >
+                      <ArrowDown size={18} />
+                    </button>
                   </div>
                   <button className="btn-icon" onClick={() => removeFile(file.id)} title="Remove file">
                     <Trash2 size={18} />

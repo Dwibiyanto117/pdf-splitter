@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, Trash2, ArrowDownToLine } from 'lucide-react';
+import { Upload, FileText, Trash2, ArrowDownToLine, ArrowUp, ArrowDown } from 'lucide-react';
 import { compressPdfs } from '../utils/pdfProcessor';
 
 export interface CompressFileItem {
@@ -72,6 +72,32 @@ export function Compress() {
     setFiles([]);
   };
 
+  const moveFileUp = (index: number) => {
+    if (index === 0) return;
+    setFiles(prev => {
+      const newFiles = [...prev];
+      [newFiles[index - 1], newFiles[index]] = [newFiles[index], newFiles[index - 1]];
+      return newFiles;
+    });
+  };
+
+  const moveFileDown = (index: number) => {
+    if (index === files.length - 1) return;
+    setFiles(prev => {
+      const newFiles = [...prev];
+      [newFiles[index + 1], newFiles[index]] = [newFiles[index], newFiles[index + 1]];
+      return newFiles;
+    });
+  };
+
+  const sortFilesAsc = () => {
+    setFiles(prev => [...prev].sort((a, b) => a.name.localeCompare(b.name)));
+  };
+
+  const sortFilesDesc = () => {
+    setFiles(prev => [...prev].sort((a, b) => b.name.localeCompare(a.name)));
+  };
+
   const handleProcess = async () => {
     if (files.length === 0) return;
     setIsProcessing(true);
@@ -121,17 +147,35 @@ export function Compress() {
               <FileText size={20} className="dropzone-icon"/>
               <span>Files to Compress ({files.length})</span>
             </div>
-            <button 
-              className="btn-icon" 
-              onClick={clearAllFiles} 
-              title="Clear all files" 
-              style={{ color: 'var(--error)' }}
-            >
-              <Trash2 size={20} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button 
+                className="btn-secondary" 
+                onClick={sortFilesAsc} 
+                title="Sort A-Z"
+                style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+              >
+                Sort A-Z
+              </button>
+              <button 
+                className="btn-secondary" 
+                onClick={sortFilesDesc} 
+                title="Sort Z-A"
+                style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem' }}
+              >
+                Sort Z-A
+              </button>
+              <button 
+                className="btn-icon" 
+                onClick={clearAllFiles} 
+                title="Clear all files" 
+                style={{ color: 'var(--error)' }}
+              >
+                <Trash2 size={20} />
+              </button>
+            </div>
           </div>
           <div className="file-list">
-            {files.map((file) => (
+            {files.map((file, index) => (
               <div key={file.id} className="file-item">
                 <div className="file-info">
                   <FileText size={18} className="text-muted"/>
@@ -144,6 +188,24 @@ export function Compress() {
                   )}
                 </div>
                 <div className="file-controls">
+                  <div style={{ display: 'flex', gap: '0.25rem', marginRight: '0.5rem' }}>
+                    <button 
+                      className="btn-icon" 
+                      onClick={() => moveFileUp(index)} 
+                      disabled={index === 0}
+                      title="Move up"
+                    >
+                      <ArrowUp size={18} />
+                    </button>
+                    <button 
+                      className="btn-icon" 
+                      onClick={() => moveFileDown(index)} 
+                      disabled={index === files.length - 1}
+                      title="Move down"
+                    >
+                      <ArrowDown size={18} />
+                    </button>
+                  </div>
                   <button className="btn-icon" onClick={() => removeFile(file.id)} title="Remove file">
                     <Trash2 size={18} />
                   </button>

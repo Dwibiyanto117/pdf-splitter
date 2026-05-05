@@ -10,6 +10,8 @@ All processing is done locally in your browser using JavaScript, ensuring maximu
 - **Custom Page Ranges**: Select exactly which pages you want to extract from each individual document.
 - **Global Settings**: Apply a default page extraction range to all uploaded files simultaneously to save time.
 - **Merge Option**: Optionally merge the extracted pages from all uploaded documents into one single PDF file.
+- **File Reordering**: Manually reorder files in the queue using move up/down buttons to set your preferred processing sequence.
+- **Quick Sorting**: Instantly sort uploaded files by name in ascending or descending order for faster management.
 - **Privacy First**: Everything happens locally within your browser. No files are ever uploaded to a server.
 - **Bulk Actions**: Easily manage your queue with bulk actions like the "Delete All" button.
 
